@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  dev-postgres:
+    image: postgres:14.4-alpine
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: aki
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: internet-forum
+    restart: always
+    networks:
+      - forum
+networks:
+  forum:
