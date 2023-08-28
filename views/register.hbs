@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{title}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+</head>
+
+<body class="container mt-2">
+    {{>header}}
+    <div class="card mx-auto">
+        <div class="card-header">Register</div>
+        {{#if signupError}}
+        <div class="alert alert-danger" role="alert">
+            {{ signupError }}
+        </div>
+        {{/if}}
+        <div class="card-body">
+            <form action="./auth/signup" method="post">
+                <div class="row mb-3">
+                    <label for="inputname" class="col-sm-2 col-form-label">名前</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputName" name="userName" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="inputEmail" class="col-sm-2 col-form-label">Eメールアドレス</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="inputEmail" name="email" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="inputPassword" class="col-sm-2 col-form-label">パスワード</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="inputPassword" name="password1" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="Password_confirmation" class="col-sm-2 col-form-label">パスワード(確認用)</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="passwordConfirmation"
+                            name="password" required>
+                    </div>
+                </div>
+                <div class="form-submit text-center">
+                    <button type="submit" class="btn btn-primary ">Register</button>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"></script>
+</body>
+
+</html>
