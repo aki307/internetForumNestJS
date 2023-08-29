@@ -10,8 +10,8 @@ export class MessageService {
     
     constructor(private prisma: PrismaService){}
 
-    getMessages(userId: number): Promise<Message[]>{
-        return this.prisma.message.findMany({
+    async getMessages(userId: number): Promise<Message[]>{
+        return await this.prisma.message.findMany({
             where: {
                 userId,
             },
@@ -21,8 +21,8 @@ export class MessageService {
         })
     }
 
-    getMessageById(userId: number, messageId: number):Promise<Message>{
-        return this.prisma.message.findFirst({
+    async getMessageById(userId: number, messageId: number):Promise<Message>{
+        return await this.prisma.message.findFirst({
             where: {
                 userId,
                 id: messageId,
@@ -54,7 +54,7 @@ export class MessageService {
         if(!message || message.userId !== userId){
             throw new ForbiddenException('No permission to update');
         }
-        return this.prisma.message.update({
+        return await this.prisma.message.update({
             where: {
                 id: messageId,
             },
@@ -65,7 +65,7 @@ export class MessageService {
 
     }
 
-    async deleteMessageById(userId: number, messageId: number){
+    async deleteMessageById(userId: number, messageId: number): Promise<void>{
         const message = await this.prisma.message.findUnique({
             where: {
                 id: messageId,
@@ -79,7 +79,7 @@ export class MessageService {
             where: {
                 id: messageId,
             }
-        })
+        });
 
     }
 }
