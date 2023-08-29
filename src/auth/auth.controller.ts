@@ -38,12 +38,7 @@ export class AuthController {
     // View -> Promise<void>
     @Post('signup')
     async signUp(@Body() dto: AuthDto, @Res() res: Response): Promise<Msg> {
-        // Postmanでも確認済
-        // const result = await this.authService.signUp(dto);
-        // res.redirect('/');
-        // return {
-        //     message: 'ok',
-        // };
+
 
         // テスト(Postmanでもエラー時はだめ)
         const hashed = await bcrypt.hash(dto.password, 12);
@@ -74,33 +69,14 @@ export class AuthController {
 
     }
 
-
-
-    // @Get('signup')
-    // async renderSignupPage(
-    //     @Query('error') error: string,
-    //     @Query('email') email: string,
-    //     @Query('userName') userName: string,
-    //     @Res() res: Response
-    // ): Promise<void> {
-    //     res.render('register', {
-    //         title: 'Sign Up',
-    //         signupError: error,
-    //         email: decodeURIComponent(email),
-    //         userName: decodeURIComponent(userName)
-    //     });
-    // }
-
     // Postman-> Promise<Msg>
     // view-> void
     @HttpCode(HttpStatus.OK)
-    // @Render('postMyMessage')
     @Post('login')
     async login(
         @Body() dto: AuthDtoLoginLogout,
-        @Res() res: Response,
+        @Res({ passthrough: true }) res: Response,
     ): Promise<Msg> {
-        try {
             const jwt = await this.authService.login(dto);
             res.cookie('access_token', jwt.accessToken, {
                 httpOnly: true,
@@ -108,15 +84,9 @@ export class AuthController {
                 sameSite: 'none',
                 path: '/',
             });
-            res.redirect('/message/');
             return {
                 message: 'ok',
             };
-        } catch (error: any) {
-            res.locals.loginError = error.message;
-            res.locals.email = dto.email;
-            res.render('index', { title: 'Login' });
-        }
     }
 
 
@@ -134,8 +104,7 @@ export class AuthController {
         });
 
         console.log('Before redirecting...');
-        // view用
-        res.redirect('/');
+    
 
         // Postman用
         return {
