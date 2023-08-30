@@ -1,4 +1,4 @@
-import { 
+import {
     Body,
     Controller,
     Delete,
@@ -10,22 +10,23 @@ import {
     Post,
     UseGuards,
     Req,
- } from '@nestjs/common';
- import { AuthGuard } from '@nestjs/passport';
- import { Request } from 'express';
- import { FavoriteService } from './favorite.service';
- import { Favorites } from '@prisma/client';
+    ForbiddenException,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
+import { FavoriteService } from './favorite.service';
+import { Favorites } from '@prisma/client';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('favorite')
 export class FavoriteController {
-    constructor(private readonly favoriteService:FavoriteService) { }
+    constructor(private readonly favoriteService: FavoriteService) { }
 
     @Get(':id')
     getFavoriteByMessageId(
         @Req() req: Request,
         @Param('id', ParseIntPipe) messageId: number,
-    ): Promise<Favorites[]>{
+    ): Promise<Favorites[]> {
         return this.favoriteService.getFavoritesByMessageId(messageId);
     }
 
@@ -33,8 +34,7 @@ export class FavoriteController {
     favoriteByMessageId(
         @Req() req: Request,
         @Param('id', ParseIntPipe) messageId: number,
-    ){
-        
+    ): Promise<Favorites | ForbiddenException> {
         return this.favoriteService.favoriteByMessageId(req.user.id, messageId);
     }
 
@@ -42,7 +42,7 @@ export class FavoriteController {
     unFavoriteByMessageId(
         @Req() req: Request,
         @Param('id', ParseIntPipe) messageId: number,
-    ){
+    ): Promise<number>  {
         return this.favoriteService.unFavoriteByMessageId(req.user.id, messageId);
-    }    
+    }
 }

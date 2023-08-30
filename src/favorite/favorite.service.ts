@@ -5,10 +5,10 @@ import { Favorites, Message } from '@prisma/client';
 
 @Injectable()
 export class FavoriteService {
-    constructor(private prisma: PrismaService){}
+    constructor(private prisma: PrismaService) { }
 
     //特定の投稿のお気に入り数の取得
-    async getFavoritesByMessageId(messageId: number){
+    async getFavoritesByMessageId(messageId: number) {
         return await this.prisma.favorites.findMany({
             where: {
                 messageId: messageId,
@@ -20,26 +20,26 @@ export class FavoriteService {
     async favoriteByMessageId(
         userId: number,
         messageId: number
-    ): Promise<Favorites | ForbiddenException>{
+    ): Promise<Favorites | ForbiddenException> {
         const message = await this.prisma.message.findMany({
             where: {
                 id: messageId,
             },
         });
-        
-        if(message.length === 0){
+
+        if (message.length === 0) {
             throw new ForbiddenException('そのメッセージは存在しません');
         }
-        
 
-        const is_favoriteing = await this.prisma.favorites.findFirst({
+
+        const nowFavoriteing = await this.prisma.favorites.findFirst({
             where: {
-                userId:userId,
-                messageId:messageId,
+                userId: userId,
+                messageId: messageId,
             },
         });
 
-        if(is_favoriteing) {
+        if (nowFavoriteing) {
             throw new ForbiddenException('既にお気に入りに登録されています');
         }
 
@@ -50,44 +50,46 @@ export class FavoriteService {
             },
         });
 
-        return await favoriteMessage;
+        return  favoriteMessage;
     }
 
     //お気に入りの解除機能
     async unFavoriteByMessageId(
         userId: number,
         messageId: number
-    ): Promise<void>{
+    ): Promise<number> {
         const message = await this.prisma.message.findMany({
             where: {
                 id: messageId,
             },
         });
 
-        if(message.length === 0){
+        if (message.length === 0) {
             throw new ForbiddenException('そのメッセージは存在しません');
         }
 
-        const is_favoriteing = await this.prisma.favorites.findFirst({
+        const nowFavoriteing = await this.prisma.favorites.findFirst({
             where: {
                 userId,
                 messageId,
             },
         });
 
-        if(!is_favoriteing) {
+        if (!nowFavoriteing) {
             throw new ForbiddenException('お気に入り登録されていません');
         }
-        const favoriteMessageId = is_favoriteing.id;
-        if(favoriteMessageId){
+        const favoriteMessageId = nowFavoriteing.id;
+        if (favoriteMessageId) {
             const favoriteMessage = await this.prisma.favorites.delete({
                 where: {
                     id: favoriteMessageId,
                 },
             });
-        }else {
+            return favoriteMessageId;
+        } else {
             throw new ForbiddenException('お気に入りのIdが取得できませんでした');
         }
-        
+
     }
 }
+
