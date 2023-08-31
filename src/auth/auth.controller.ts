@@ -50,7 +50,6 @@ export class AuthController {
                     userName: dto.userName
                 },
             });
-            res.redirect('/');
             // Postman用
             return {
                 message: 'ok',
@@ -61,10 +60,6 @@ export class AuthController {
                     throw new ForbiddenException('このメールアドレスは既に登録されています。');
                 }
             }
-            res.locals.signupError =  error.message;
-            res.locals.email =  dto.email;
-            res.locals.userName =  dto.userName;
-            res.render('/register', { title: 'Register' });
         }
 
     }

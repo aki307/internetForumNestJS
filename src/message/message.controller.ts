@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,
@@ -52,7 +53,7 @@ export class MessageController {
     @Req() req: Request,
     @Param('id', ParseIntPipe) messageId: number,
     @Body() dto: UpdateMessageDto,
-  ): Promise<Message>{
+  ): Promise<Message> {
     return this.messageService.UpdateMessageById(req.user.id, messageId, dto);
   }
 
@@ -61,8 +62,9 @@ export class MessageController {
   deleteMessageById(
     @Req() req: Request,
     @Param('id', ParseIntPipe) messageId: number,
-  ): Promise<void>{
+  ): Promise<void | ForbiddenException> {
     return this.messageService.deleteMessageById(req.user.id, messageId);
   }
 
 }
+

@@ -8,6 +8,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { FavoriteModule } from './favorite/favorite.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { join } from 'path';
     PrismaModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
-    })
+    }),
+    FavoriteModule
   ],
   controllers: [AppController],
   providers: [AppService],
